@@ -1,0 +1,154 @@
+{
+  "id": "k8s-resilience-operator",
+  "slug": "k8s-resilience-operator",
+  "title": "Operador Kubernetes Cloud-Native & Auto-Healing de Cargas Críticas",
+  "shortDescription": "Operador Go con Kubebuilder, reconciliación continua de CRDs, drenado seguro y auto-scaling proactivo.",
+  "description": "Creación de un Operador Kubernetes personalizado en Go para gestionar el ciclo de vida de microservicios con requisitos estrictos de alta disponibilidad, failover automático entre zonas de disponibilidad y observabilidad nativa.",
+  "track": "Cloud & Kubernetes",
+  "difficulty": "Experto / Staff",
+  "estimatedHours": 40,
+  "recommendedWeeks": 4,
+  "icon": "☸️",
+  "badgeColor": "#3b82f6",
+  "tags": [
+    "labs.kubernetes",
+    "labs.operator",
+    "labs.resilience"
+  ],
+  "prerequisites": [
+    "Internals de la API de Kubernetes",
+    "Concurrencia en Go",
+    "Control Loops y Declarative Reconciliation"
+  ],
+  "status": "NOT_STARTED",
+  "progressPercentage": 0,
+  "completedMilestones": 0,
+  "milestonesCount": 4,
+  "githubTemplateUrl": "https://github.com/dokove/lab-k8s-operator-resilience-template",
+  "architectureOverview": "El operador introduce la Custom Resource Definition (CRD) \"ResilientService\" que unifica Deployment, Service, HPA, NetworkPolicy y PodDisruptionBudget bajo una única política de resiliencia. El reconciliador de Go supervisa la salud de los pods y ejecuta drenados predictivos cuando los nodos experimentan degradación térmica o latencia excesiva.",
+  "nonFunctionalRequirements": [
+    "Tiempo de reconciliación promedio < 150ms tras un cambio en la especificación CRD.",
+    "Cero pérdida de paquetes durante el drenado de réplicas en actualizaciones rolling.",
+    "Soporte multi-arquitectura (amd64 y arm64).",
+    "Métricas Prometheus expuestas en el endpoint /metrics del controller-manager."
+  ],
+  "techStack": [
+    {
+      "name": "Go 1.24 & Kubebuilder",
+      "role": "Operator Controller & Webhooks"
+    },
+    {
+      "name": "K8s controller-runtime",
+      "role": "Informer Cache & Leader Election"
+    },
+    {
+      "name": "Prometheus & Grafana",
+      "role": "Operator Telemetry & Alerts"
+    },
+    {
+      "name": "Chaos Mesh",
+      "role": "Inyección de Fallos de Pod y Red"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "k8s-1",
+      "order": 1,
+      "title": "Fase 1: Definición de la CRD y Validating Webhook",
+      "description": "Modelado del esquema OpenAPI v3 de ResilientService con validaciones de rangos y Admission Webhook de validación en tiempo de admisión.",
+      "keyDeliverables": [
+        "CRD manifest YAML generado con controller-gen.",
+        "Webhook de validación con TLS auto-generado."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "k8s-2",
+      "order": 2,
+      "title": "Fase 2: Controller Reconcile Loop & Idempotencia",
+      "description": "Bucle de reconciliación idempotente con gestión de OwnerReferences para garbage collection automática de recursos hijos.",
+      "keyDeliverables": [
+        "Reconciliador en Go gestionando Deployments, PDBs y Services.",
+        "Tests unitarios de controlador con envtest de Kubernetes."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "k8s-3",
+      "order": 3,
+      "title": "Fase 3: Auto-Healing & Status Subresource",
+      "description": "Detección proactiva de pods no saludables y actualización del subrecurso Status con condiciones estándar de Kubernetes.",
+      "keyDeliverables": [
+        "Gestión de Status.Conditions según las guías oficiales de Kubernetes API.",
+        "Lógica de auto-healing y drenado ordenado."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "k8s-4",
+      "order": 4,
+      "title": "Fase 4: Helm Chart, Pruebas de Caos y Despliegue",
+      "description": "Empaquetado en Helm Chart con RBAC de mínimo privilegio y verificación con Chaos Mesh en clúster local Kind/K3s.",
+      "keyDeliverables": [
+        "Helm Chart con valores configurables de producción.",
+        "Reporte de pruebas de caos verificando recuperación automática."
+      ],
+      "isCompleted": false
+    }
+  ],
+  "rubric": [
+    {
+      "id": "rub-k8s-1",
+      "name": "Patrones de Controlador Kubernetes",
+      "weight": 40,
+      "criteria": [
+        {
+          "title": "Reconciliación Idempotente",
+          "points": 20,
+          "description": "El reconcile loop converge al estado deseado sin bucles infinitos."
+        },
+        {
+          "title": "OwnerReferences & GC",
+          "points": 20,
+          "description": "Borrado en cascada correcto sin dejar recursos huérfanos."
+        }
+      ]
+    },
+    {
+      "id": "rub-k8s-2",
+      "name": "Seguridad y Buenas Prácticas Cloud-Native",
+      "weight": 35,
+      "criteria": [
+        {
+          "title": "RBAC Mínimo Privilegio",
+          "points": 20,
+          "description": "Solo permisos sobre los recursos que el operador estrictamente manipula."
+        },
+        {
+          "title": "Leader Election",
+          "points": 15,
+          "description": "Soporte de alta disponibilidad con múltiples réplicas del operador."
+        }
+      ]
+    },
+    {
+      "id": "rub-k8s-3",
+      "name": "Documentación y Entrega",
+      "weight": 25,
+      "criteria": [
+        {
+          "title": "Helm Chart & CI",
+          "points": 15,
+          "description": "Instalación en un solo comando con Helm y pipeline de tests automatizados."
+        },
+        {
+          "title": "Reporte de Caos",
+          "points": 10,
+          "description": "Evidencia gráfica del auto-healing ante fallos inducidos."
+        }
+      ]
+    }
+  ],
+  "submissions": [],
+  "category": "labs.cloud-kubernetes"
+}

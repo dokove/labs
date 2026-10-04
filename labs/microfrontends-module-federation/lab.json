@@ -1,0 +1,153 @@
+{
+  "id": "microfrontends-module-federation",
+  "slug": "microfrontends-module-federation",
+  "title": "Plataforma Enterprise Microfrontends con Module Federation y SSR",
+  "shortDescription": "Arquitectura distribuida frontend con Next.js host, remotes Vite desacoplados y estado compartido.",
+  "description": "Construcción de un ecosistema empresarial multi-equipo compuesto por un App Shell Next.js con SSR y micro-apps federadas independientes (Catálogo, Checkout, Panel de Cuenta) desplegables de forma no bloqueante.",
+  "track": "Frontend & Architecture",
+  "difficulty": "Avanzado",
+  "estimatedHours": 28,
+  "recommendedWeeks": 2,
+  "icon": "⚛️",
+  "badgeColor": "#0ea5e9",
+  "tags": [
+    "labs.microfrontends",
+    "labs.module-federation"
+  ],
+  "prerequisites": [
+    "Arquitectura de Componentes React",
+    "Webpack / Rspack / Vite internals",
+    "Diseño de Design Systems"
+  ],
+  "status": "NOT_STARTED",
+  "progressPercentage": 0,
+  "completedMilestones": 0,
+  "milestonesCount": 4,
+  "githubTemplateUrl": "https://github.com/dokove/lab-microfrontends-federation-template",
+  "architectureOverview": "El proyecto resuelve el problema del desacoplamiento de equipos en grandes organizaciones frontend. El Host (App Shell) gestiona la autenticación global, navegación, layouts y telemetría de Core Web Vitals, mientras que las micro-apps federadas se cargan bajo demanda con fallback de resiliencia ante caídas de red de un remoto.",
+  "nonFunctionalRequirements": [
+    "Largest Contentful Paint (LCP) <= 1.8s en conexiones 4G estándar.",
+    "Aislamiento estricto de estilos CSS para evitar contaminación cruzada entre micro-apps.",
+    "Degradación elegante: si un remoto federado falla, el resto de la aplicación opera con un widget de error aislado.",
+    "Compartición eficiente de dependencias singleton (React, React-DOM, UI tokens) sin duplicar bundles en memoria."
+  ],
+  "techStack": [
+    {
+      "name": "Next.js 16 & React 19",
+      "role": "App Shell Host & SSR Gateway"
+    },
+    {
+      "name": "@module-federation/enhanced",
+      "role": "Runtime Federation Engine"
+    },
+    {
+      "name": "Vite & Tailwind CSS",
+      "role": "Independent Remote Apps & Scoped Styling"
+    },
+    {
+      "name": "Zustand & EventBus",
+      "role": "Cross-App Synchronized State"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "mf-1",
+      "order": 1,
+      "title": "Fase 1: Configuración del Host y Shared Dependencies Matrix",
+      "description": "Configuración del App Shell con soporte SSR para módulos federados remotos y configuración de dependencias singleton para evitar descargas duplicadas.",
+      "keyDeliverables": [
+        "Webpack / Rspack config con module federation manifest.",
+        "Matriz de dependencias compartidas documentada y verificada en bundle analyzer."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "mf-2",
+      "order": 2,
+      "title": "Fase 2: Remotos Autónomos (Catalog & Checkout)",
+      "description": "Desarrollo de las aplicaciones remotas con sus propios pipelines CI/CD y despliegue independiente con versionado semántico.",
+      "keyDeliverables": [
+        "Dos aplicaciones remotas compilando sus manifests remoteEntry.js.",
+        "Manejo de rutas internas anidadas sin conflictos en el browser history."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "mf-3",
+      "order": 3,
+      "title": "Fase 3: Contratos de Comunicación & EventBus Type-Safe",
+      "description": "Canal de comunicación entre micro-apps para eventos de carrito, autenticación y notificaciones con contratos TypeScript compartidos.",
+      "keyDeliverables": [
+        "Paquete npm interno con tipos de eventos compartidos.",
+        "Error Boundaries granulares por cada módulo remoto federado."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "mf-4",
+      "order": 4,
+      "title": "Fase 4: Auditoría Web Vitals y Pipeline de Release",
+      "description": "Pruebas E2E de navegación cruzada con Playwright y validación de Core Web Vitals en Lighthouse CI.",
+      "keyDeliverables": [
+        "Puntuación Lighthouse Performance > 90 en todas las vistas integradas.",
+        "Tests E2E simulando fallo de carga de un remoto con fallback visible."
+      ],
+      "isCompleted": false
+    }
+  ],
+  "rubric": [
+    {
+      "id": "rub-mf-1",
+      "name": "Estrategia de Federación & Bundling",
+      "weight": 35,
+      "criteria": [
+        {
+          "title": "Dependencias Singleton",
+          "points": 20,
+          "description": "React y librerías críticas no se descargan más de una vez."
+        },
+        {
+          "title": "Resiliencia y Error Boundaries",
+          "points": 15,
+          "description": "Un error 404/500 en un remoto no tumba la aplicación entera."
+        }
+      ]
+    },
+    {
+      "id": "rub-mf-2",
+      "name": "Rendimiento y Core Web Vitals",
+      "weight": 35,
+      "criteria": [
+        {
+          "title": "Métricas LCP y CLS",
+          "points": 20,
+          "description": "Carga suave sin saltos de layout al montar remotos dinámicos."
+        },
+        {
+          "title": "Code Splitting Inteligente",
+          "points": 15,
+          "description": "Carga perezosa (lazy load) de rutas y componentes pesados."
+        }
+      ]
+    },
+    {
+      "id": "rub-mf-3",
+      "name": "Calidad del Código & DX",
+      "weight": 30,
+      "criteria": [
+        {
+          "title": "Type Safety en Eventos",
+          "points": 15,
+          "description": "Eventos del bus fuertemente tipados sin uso de `any`."
+        },
+        {
+          "title": "Desacoplamiento de Despliegue",
+          "points": 15,
+          "description": "Los remotos pueden desplegarse sin reiniciar el Host."
+        }
+      ]
+    }
+  ],
+  "submissions": [],
+  "category": "labs.frontend-architecture"
+}

@@ -1,0 +1,208 @@
+{
+  "id": "motor-transacciones-event-sourcing",
+  "slug": "motor-transacciones-event-sourcing",
+  "title": "Motor de Transacciones & Event Sourcing Distribuido",
+  "shortDescription": "Motor financiero distribuido de alta concurrencia con Outbox Pattern, Kafka y snapshots CQRS.",
+  "description": "Diseño e implementación de un motor bancario y de liquidación transaccional con arquitectura hexagonal, garantía Exactly-Once en deduplicación de eventos, consistencia eventual y snapshots en Redis.",
+  "track": "Distributed Systems",
+  "difficulty": "Experto / Staff",
+  "estimatedHours": 35,
+  "recommendedWeeks": 3,
+  "icon": "⚡",
+  "badgeColor": "#6366f1",
+  "tags": [
+    "labs.kafka",
+    "labs.event-sourcing",
+    "labs.cqrs",
+    "labs.redis",
+    "labs.outbox-pattern"
+  ],
+  "prerequisites": [
+    "Concurrencia en Go o Node.js",
+    "Modelos ACID vs BASE",
+    "Particionado en Kafka / Redpanda"
+  ],
+  "status": "IN_PROGRESS",
+  "progressPercentage": 50,
+  "completedMilestones": 2,
+  "milestonesCount": 4,
+  "githubTemplateUrl": "https://github.com/dokove/lab-distributed-transactions-template",
+  "architectureOverview": "Este laboratorio final evalúa la capacidad de construir un sistema de alta concurrencia con tolerancia a particiones de red. El núcleo utiliza Event Sourcing donde el estado actual de las cuentas se proyecta a partir de un log inmutable de eventos de débito y crédito. El Transaction Coordinator garantiza idempotencia mediante claves de reconciliación y un Outbox Worker asíncrono.",
+  "nonFunctionalRequirements": [
+    "Throughput sostenido >= 4,500 transacciones/segundo por nodo.",
+    "Latencia p99 en operaciones de saldo <= 25ms.",
+    "Idempotencia estricta: transacciones duplicadas deben retornar el mismo resultado sin doble cargo.",
+    "Recuperación automática de réplicas de lectura ante desconexiones de red."
+  ],
+  "techStack": [
+    {
+      "name": "Node.js / Go",
+      "role": "Transaction Core Engine"
+    },
+    {
+      "name": "Apache Kafka / Redpanda",
+      "role": "Event Log & Stream Ingestion"
+    },
+    {
+      "name": "PostgreSQL",
+      "role": "Event Store & Outbox Relational Table"
+    },
+    {
+      "name": "Redis",
+      "role": "Materialized View Snapshots & Distributed Locks"
+    },
+    {
+      "name": "Prometheus & OpenTelemetry",
+      "role": "Distributed Tracing & Metrics"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "m1",
+      "order": 1,
+      "title": "Fase 1: RFC Técnico y Modelado Hexagonal de Dominio",
+      "description": "Redacción del RFC de arquitectura, delimitación de agregados DDD (Account, LedgerEntry, Transaction) y pruebas unitarias puras del dominio sin dependencias de infraestructura.",
+      "keyDeliverables": [
+        "RFC en Markdown con diagramas de secuencia Mermaid.",
+        "Modelos de dominio inmutables y eventos versionados (v1, v2).",
+        "Cobertura unitaria del 100% sobre las reglas de balance contable."
+      ],
+      "isCompleted": true,
+      "completedAt": "2026-09-28T10:00:00Z"
+    },
+    {
+      "id": "m2",
+      "order": 2,
+      "title": "Fase 2: Transactional Outbox & Broker Ingestion",
+      "description": "Implementación del patrón Transactional Outbox en PostgreSQL para evitar Dual-Write Hazards y pipeline de publicación fiable hacia Kafka con serialización Protobuf.",
+      "keyDeliverables": [
+        "Worker de Outbox con sondeo eficiente y bloqueo de filas SKIP LOCKED.",
+        "Productor Kafka con reintentos exponenciales y clave de partición por AccountID.",
+        "Tests de integración con Testcontainers."
+      ],
+      "isCompleted": true,
+      "completedAt": "2026-10-02T16:30:00Z"
+    },
+    {
+      "id": "m3",
+      "order": 3,
+      "title": "Fase 3: Proyección CQRS & Snapshots en Redis",
+      "description": "Construcción de los consumidores de eventos para alimentar vistas materializadas de lectura en Redis con soporte para replay de eventos históricos y snapshots periódicos cada 500 eventos.",
+      "keyDeliverables": [
+        "Consumer Group escalable horizontalmente con gestión manual de offsets.",
+        "Mecanismo de Snapshot en Redis con TTL y reconciliación reactiva.",
+        "API de lectura de saldos e historial auditado con tiempo de respuesta < 20ms."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "m4",
+      "order": 4,
+      "title": "Fase 4: Caos Engineering, Benchmarks y Entrega Final",
+      "description": "Inyección de fallos de red con Toxiproxy durante ráfagas de 5,000 req/s, verificación de consistencia matemática entre Ledger y Vistas y preparación del repositorio para revisión.",
+      "keyDeliverables": [
+        "Suite de pruebas de carga con k6 y reporte de latencias p95/p99.",
+        "Prueba de caos documentada demostrando cero discrepancias de saldo.",
+        "Pull Request final con pipeline CI/CD de GitHub Actions / GitLab CI."
+      ],
+      "isCompleted": false
+    }
+  ],
+  "rubric": [
+    {
+      "id": "r1",
+      "name": "Arquitectura Limpia & Event Sourcing",
+      "weight": 30,
+      "criteria": [
+        {
+          "title": "Inmutabilidad del Event Store",
+          "points": 15,
+          "description": "Eventos inmutables, con timestamp UTC, IDs unívocos y esquema versionado."
+        },
+        {
+          "title": "Aislamiento de Capas",
+          "points": 15,
+          "description": "Dominio desacoplado de bases de datos y brokers mediante interfaces (puertos y adaptadores)."
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "name": "Concurrencia, Idempotencia & Integridad",
+      "weight": 30,
+      "criteria": [
+        {
+          "title": "Prevención de Double-Spend",
+          "points": 15,
+          "description": "Bloqueos optimistas o distribuidos que impiden sobregiros o saldos negativos bajo concurrencia."
+        },
+        {
+          "title": "Transactional Outbox sin fugas",
+          "points": 15,
+          "description": "Garantía de que ningún evento se pierde o duplica silenciosamente."
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "name": "Testing, Benchmarks & Caos",
+      "weight": 25,
+      "criteria": [
+        {
+          "title": "Pruebas E2E con Testcontainers",
+          "points": 15,
+          "description": "Suite reproducible que arranca Kafka, Postgres y Redis en contenedores."
+        },
+        {
+          "title": "Resultados de Carga k6",
+          "points": 10,
+          "description": "Comprobación de métricas de rendimiento y SLAs estipulados."
+        }
+      ]
+    },
+    {
+      "id": "r4",
+      "name": "Documentación & Calidad de Entrega",
+      "weight": 15,
+      "criteria": [
+        {
+          "title": "Claridad del RFC y Guía de Despliegue",
+          "points": 10,
+          "description": "Instrucciones precisas para ejecutar docker compose up y reproducir la revisión."
+        },
+        {
+          "title": "Clean Code y Linting",
+          "points": 5,
+          "description": "Estilo consistente, cero dead-code y tipado riguroso."
+        }
+      ]
+    }
+  ],
+  "submissions": [
+    {
+      "id": "sub-1",
+      "labId": "motor-transacciones-event-sourcing",
+      "repositoryUrl": "https://github.com/alumno-demo/dokove-event-sourcing-lab",
+      "pullRequestUrl": "https://github.com/alumno-demo/dokove-event-sourcing-lab/pull/1",
+      "demoUrl": "https://ledger.demo.dokove.internal",
+      "notes": "Completadas las fases 1 y 2 con éxito. Hemos añadido un test de concurrencia con 20 workers simultáneos sobre la misma cuenta.",
+      "status": "IN_REVIEW",
+      "submittedAt": "2026-10-02T17:00:00Z",
+      "review": {
+        "reviewerName": "Elena Rostova",
+        "reviewerRole": "Staff Distributed Systems Architect",
+        "reviewedAt": "2026-10-03T11:20:00Z",
+        "score": 92,
+        "summary": "Excelente separación en la capa de dominio y sólida implementación del Outbox Pattern. Queda pendiente la suite de caos de la fase 4.",
+        "strengths": [
+          "Uso impecable de tipos inmutables en los eventos.",
+          "Claves de reconciliación bien diseñadas para idempotencia."
+        ],
+        "improvements": [
+          "Añadir jitter en el intervalo de sondeo del Outbox Worker para evitar thundering herd."
+        ]
+      }
+    }
+  ],
+  "category": "labs.distributed-systems"
+}

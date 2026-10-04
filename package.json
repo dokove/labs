@@ -1,0 +1,40 @@
+{
+  "name": "@dokove/pub-labs",
+  "version": "0.1.0",
+  "description": "Proyectos de fin de etapa y laboratorios de ingeniería de software con taxonomías centralizadas Dokove.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./labs.json": "./dist/labs.json"
+  },
+  "files": [
+    "dist",
+    "labs",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build-labs-data.mjs",
+    "validate": "node scripts/validate-taxonomies.mjs",
+    "test": "npm run build && npm run validate"
+  },
+  "dependencies": {
+    "@dokove/taxonomies": "file:../pub.taxonomies"
+  },
+  "keywords": [
+    "dokove",
+    "labs",
+    "capstone",
+    "engineering-projects",
+    "taxonomies",
+    "architecture"
+  ],
+  "author": "Dokove Community",
+  "license": "MIT"
+}

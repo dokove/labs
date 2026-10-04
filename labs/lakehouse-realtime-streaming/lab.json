@@ -1,0 +1,142 @@
+{
+  "id": "lakehouse-realtime-streaming",
+  "slug": "lakehouse-realtime-streaming",
+  "title": "Pipeline de Streaming Analítico en Tiempo Real con Delta Lake y PySpark",
+  "shortDescription": "Ingestión continua de telemetría de eventos con PySpark Structured Streaming, Delta Lake y validación de calidad.",
+  "description": "Desarrollo de un pipeline end-to-end de datos con arquitectura Medallion (Bronze, Silver, Gold), deduplicación de streams en ventana de agua (watermarking), control de esquema (schema enforcement) y pruebas de calidad de datos.",
+  "track": "Data & ML Engineering",
+  "difficulty": "Experto / Staff",
+  "estimatedHours": 32,
+  "recommendedWeeks": 3,
+  "icon": "🔥",
+  "badgeColor": "#e11d48",
+  "tags": [
+    "labs.lakehouse",
+    "labs.spark",
+    "labs.kafka"
+  ],
+  "prerequisites": [
+    "SQL Analítico Avanzado",
+    "PySpark / DataFrames API",
+    "Almacenamiento de Objetos en S3 / MinIO"
+  ],
+  "status": "NOT_STARTED",
+  "progressPercentage": 0,
+  "completedMilestones": 0,
+  "milestonesCount": 3,
+  "githubTemplateUrl": "https://github.com/dokove/lab-lakehouse-streaming-template",
+  "architectureOverview": "El pipeline consume telemetría de dispositivos IoT y eventos de usuario en Kafka, los almacena en capa Bronze con formato Delta Lake crudo, ejecuta transformaciones y validación de calidad en capa Silver aplicando deduplicación y reglas de negocio, y finalmente agrega métricas en tiempo real en la capa Gold para analítica de negocio.",
+  "nonFunctionalRequirements": [
+    "Garantía de procesamiento End-to-End Exactly-Once utilizando checkpoints de Spark y transacciones ACID de Delta.",
+    "Soporte para eventos tardíos (late-arriving data) de hasta 15 minutos mediante watermarking.",
+    "Rechazo automático de datos corruptos con desvío a tabla Dead Letter Queue (DLQ)."
+  ],
+  "techStack": [
+    {
+      "name": "PySpark 3.5+",
+      "role": "Distributed Processing Engine"
+    },
+    {
+      "name": "Delta Lake 3.0",
+      "role": "ACID Storage Layer & Time Travel"
+    },
+    {
+      "name": "MinIO / S3",
+      "role": "Object Storage Lakehouse"
+    },
+    {
+      "name": "Great Expectations",
+      "role": "Data Contracts & Schema Validation"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "lk-1",
+      "order": 1,
+      "title": "Fase 1: Capa Bronze & Ingestión Cruda Streaming",
+      "description": "Consumo continuo desde Kafka y escritura append-only en tablas Delta Bronze con metadatos de ingestión (timestamp, offset, partición).",
+      "keyDeliverables": [
+        "Job PySpark Structured Streaming con Checkpointing persistente.",
+        "Particionado temporal por fecha de ingestión."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "lk-2",
+      "order": 2,
+      "title": "Fase 2: Capa Silver & Deduplicación con Watermark",
+      "description": "Limpieza de esquemas, desenrollado de payloads JSON, deduplicación de IDs con watermarking de 15 minutos y enrutamiento a DLQ.",
+      "keyDeliverables": [
+        "Transformación Silver con manejo de tipos nulos y saneamiento.",
+        "Manejo de DLQ para registros que no cumplen el contrato de esquema."
+      ],
+      "isCompleted": false
+    },
+    {
+      "id": "lk-3",
+      "order": 3,
+      "title": "Fase 3: Capa Gold & Agregaciones Temporales",
+      "description": "Construcción de tablas agregadas Gold con ventanas deslizantes de 5 minutos, optimización con Z-Order y suite de tests Great Expectations.",
+      "keyDeliverables": [
+        "Vistas Gold optimizadas para consultas BI de baja latencia.",
+        "Suite de calidad Great Expectations ejecutada en cada micro-batch."
+      ],
+      "isCompleted": false
+    }
+  ],
+  "rubric": [
+    {
+      "id": "rub-lk-1",
+      "name": "Integridad y Calidad de Datos",
+      "weight": 40,
+      "criteria": [
+        {
+          "title": "Manejo de Late Data & Watermarking",
+          "points": 20,
+          "description": "Eventos tardíos procesados correctamente sin duplicados."
+        },
+        {
+          "title": "Dead Letter Queue (DLQ)",
+          "points": 20,
+          "description": "Registros malformados aislados sin detener el streaming."
+        }
+      ]
+    },
+    {
+      "id": "rub-lk-2",
+      "name": "Optimización Lakehouse",
+      "weight": 35,
+      "criteria": [
+        {
+          "title": "Checkpointing & Exactly Once",
+          "points": 20,
+          "description": "Reanudación desde el último checkpoint tras un fallo sin duplicación."
+        },
+        {
+          "title": "Z-Ordering & Compaction",
+          "points": 15,
+          "description": "Optimización de archivos pequeños en Delta Lake (vacuum/optimize)."
+        }
+      ]
+    },
+    {
+      "id": "rub-lk-3",
+      "name": "Documentación y Reproducibilidad",
+      "weight": 25,
+      "criteria": [
+        {
+          "title": "Docker Compose Local",
+          "points": 15,
+          "description": "Todo el stack (Kafka, MinIO, Spark) levantable localmente."
+        },
+        {
+          "title": "Pruebas Automatizadas de Calidad",
+          "points": 10,
+          "description": "Validación de contratos de datos con Great Expectations."
+        }
+      ]
+    }
+  ],
+  "submissions": [],
+  "category": "labs.data-engineering"
+}
