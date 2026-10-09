@@ -28,7 +28,7 @@
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
-    "@dokove/taxonomies": "file:../pub.taxonomies"
+    "@dokove/taxonomies": "file:../taxonomies"
   },
   "devDependencies": {
     "@dokove/flexible-content": "file:../dokove.ui/packages/flexible-content",
