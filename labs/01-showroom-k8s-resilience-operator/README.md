@@ -1,4 +1,4 @@
-# Operador Kubernetes Cloud-Native & Auto-Healing de Cargas Críticas
+# 01 Showroom: Operador Kubernetes Cloud-Native & Auto-Healing de Cargas Críticas
 
 > **Laboratorio de Fin de Etapa (Capstone Project)**
 > Categoría: `labs.cloud-kubernetes`

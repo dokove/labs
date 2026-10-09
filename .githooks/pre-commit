@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+
+echo "🔍 [Pre-commit hook] Validando laboratorios y taxonomías en pub.labs..."
+npm test
+
+echo "✅ Pre-commit hook completado exitosamente."

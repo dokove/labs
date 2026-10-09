@@ -1,14 +1,14 @@
 {
-  "id": "k8s-resilience-operator",
-  "slug": "k8s-resilience-operator",
-  "title": "Operador Kubernetes Cloud-Native & Auto-Healing de Cargas Críticas",
+  "id": "01-showroom-k8s-resilience-operator",
+  "slug": "01-showroom-k8s-resilience-operator",
+  "title": "01 Showroom: Operador Kubernetes Cloud-Native & Auto-Healing de Cargas Críticas",
   "shortDescription": "Operador Go con Kubebuilder, reconciliación continua de CRDs, drenado seguro y auto-scaling proactivo.",
   "description": "Creación de un Operador Kubernetes personalizado en Go para gestionar el ciclo de vida de microservicios con requisitos estrictos de alta disponibilidad, failover automático entre zonas de disponibilidad y observabilidad nativa.",
   "track": "Cloud & Kubernetes",
   "difficulty": "Experto / Staff",
   "estimatedHours": 40,
   "recommendedWeeks": 4,
-  "icon": "☸️",
+  "icon": "cloud",
   "badgeColor": "#3b82f6",
   "tags": [
     "labs.kubernetes",

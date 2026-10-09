@@ -1,6 +1,6 @@
 {
-  "name": "@dokove/pub-labs",
-  "version": "0.1.0",
+  "name": "@dokove/labs",
+  "version": "1.0.0",
   "description": "Proyectos de fin de etapa y laboratorios de ingeniería de software con taxonomías centralizadas Dokove.",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,12 +20,26 @@
     "README.md"
   ],
   "scripts": {
+    "dev": "npm run build && vite",
     "build": "node scripts/build-labs-data.mjs",
-    "validate": "node scripts/validate-taxonomies.mjs",
-    "test": "npm run build && npm run validate"
+    "validate:taxonomies": "node scripts/validate-taxonomies.mjs",
+    "validate": "npm run validate:taxonomies",
+    "test": "npm run build && npm run validate:taxonomies",
+    "prepare": "git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
     "@dokove/taxonomies": "file:../pub.taxonomies"
+  },
+  "devDependencies": {
+    "@dokove/flexible-content": "file:../dokove.ui/packages/flexible-content",
+    "@vitejs/plugin-react": "^6.1.1",
+    "dokove-icons": "file:../dokove.ui/packages/icons",
+    "dokove-labs": "file:../dokove.ui/packages/labs",
+    "dokove-ui": "file:../dokove.ui/packages/ui",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-select": "^5.10.2",
+    "vite": "^8.3.2"
   },
   "keywords": [
     "dokove",
